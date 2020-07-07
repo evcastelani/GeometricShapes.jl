@@ -1,0 +1,9 @@
+name = "GeometricShapes"
+uuid = "11cc73f8-bfb9-11ea-333e-c301a03a3156"
+authors = ["evcastelani <evcastelani@uem.br>"]
+version = "0.1.0"
+
+[deps]
+DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
+Liga = "c6f2b8c2-80b4-11e9-198e-97a7f734ea2b"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
