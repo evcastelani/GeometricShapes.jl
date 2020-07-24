@@ -1,7 +1,7 @@
 name = "GeometricShapes"
 uuid = "11cc73f8-bfb9-11ea-333e-c301a03a3156"
 authors = ["evcastelani <evcastelani@uem.br>"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"

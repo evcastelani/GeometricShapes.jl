@@ -18,7 +18,7 @@ end
 
 """
 This type is a MultiVector of embedded points of R^n. It is the 
-representation of an image like a vector of MultiVectors. 
+representation of an image like a vector of MultiVectors.
 """
 mutable struct GAImage
 	coords :: Vector{MultiVector}
@@ -26,7 +26,14 @@ mutable struct GAImage
 end
 
 """
-This function is a constructor of a GAImage type
+This function is a constructor of a GAImage type. This depends of 
+a defined GA enviromment, so it is recommended run the register 
+function before. 
+	
+	Example:
+
+	julia> image = GeometricShapes.gaimage("quadrado.txt");
+
 """
 function gaimage(file::String)
 	A = readdlm(file)
@@ -51,23 +58,44 @@ can be used.
 """
 function uniform_selection(A::GAImage)
 	# need to code!
-	return A.coords[1:2:lenght(A.coords)]
+	return GAImage(A.coords[1:2:length(A.coords)])
 end
+
+function uniform_selection2(A::GAImage)
+	k = 1
+	store_index = [1]
+	choose = rand([1,2,3,4,5])
+	while k+choose<length(A.coords)
+		push!(store_index,k+choose)
+		k = k+choose
+		choose = rand([1,2,3])
+	end
+	return GAImage(A.coords[store_index])
+end
+
+
 
 """
 This is the main function and it is used to detect a shape
 from a GAImage type. We need to setup vote_bound and precision.
+
+	Example
+
+	julia> obj = GeometricShapes.detect(image,plans,50,0.5)
+
+	returns a vector obj which contains each detected object.
+
 """
 function detect(A::GAImage,regs::RegisteredShape,vote_bound=50,ε=0.01)
 	nGAob = length(regs.GAobjects)
 	nGAim = length(A.coords)
 	vot = zeros(nGAob)
 	for i=1:1:nGAob
-		for j:1:1:nGAim
-			#M = Liga.inner(A.coords[j],regs.GAobjects[i])
-			#if norm(M.comp,inf)<ε
-			#	vot[i] += 1
-			#end
+		for j=1:1:nGAim
+			M = Liga.inner(A.coords[j],regs.GAobjects[i])
+			if norm(M.comp,Inf)<ε
+				vot[i] += 1
+			end
 		end
 	end
 	detc = findall(t -> t>vote_bound, vot)
@@ -76,9 +104,14 @@ end
 
 """
 This function automates build some RegisteredShape
+
+	Example
+
+	julia> GeometricShapes.register("plan",2,"Conformal",Any[400,400])
+
 """
 function register(tobj::String,dim::Int,space::String,addinfo::Vector{Any})
-	if tobj = "plan" && dim == 2 && obs[2] == "Conformal"
+	if tobj == "plan" && dim == 2 && space == "Conformal"
 		layout(3,1,"Conformal")
 		P = []
 		lv = addinfo[1]
