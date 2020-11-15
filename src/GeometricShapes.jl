@@ -92,7 +92,7 @@ function detect(A::GAImage,regs::RegisteredShape,vote_bound=50,ε=0.01)
 	vot = zeros(nGAob)
 	for i=1:1:nGAob
 		for j=1:1:nGAim
-			M = Liga.inner(A.coords[j],regs.GAobjects[i])
+			M = Liga.inner(regs.GAobjects[i],A.coords[j])
 			if norm(M.comp,Inf)<ε
 				vot[i] += 1
 			end
@@ -134,6 +134,20 @@ function register(tobj::String,dim::Int,space::String,addinfo::Vector{Any})
 			end
 	    	end
 		return RegisteredShape(" line ",[3,1,"Conformal"],P, 2)
+	end
+	if tobj == "circle" && dim ==2 && space == "Conformal"
+		layout(3,1,"Conformal")
+		Sph = []
+		lv = addinfo[1]
+		lh = addinfo[2]
+		for px = 5:lh-5
+			for py = 5:lv-5
+				for ρ=10:20
+					Sph = push!(Sph,embedding(Float64.([px,py]))-0.5*(ρ^2)*e∞)
+				end
+			end
+		end
+		return RegisteredShape("circle",[3,1,"Conformal"],Sph,2)
 	end
 end
 end # module
